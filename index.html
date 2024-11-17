@@ -93,7 +93,50 @@
         // 신문 선택 함수
         function showNewspaper(newspaper) {
             const date = document.getElementById('date').value.replace(/-/g, '');
-            document.getElementById('newspaper-frame').src = `${newspaper}?date=${date}`;
+            const frame = document.getElementById('newspaper-frame');
+            if (newspaper === 'newspaper2.html') {
+                loadLoginPage(date);
+            } else {
+                frame.src = `${newspaper}?date=${date}`;
+            }
+        }
+
+        // 로그인 페이지 로드 함수
+        function loadLoginPage(date) {
+            const loginUrl = "https://plus.hankyung.com/apps/member.login_hk?category=comp";
+            const frame = document.getElementById('newspaper-frame');
+            frame.src = loginUrl;
+
+            let redirected = false;
+
+            const checkRedirect = setInterval(() => {
+                try {
+                    const iframeWindow = frame.contentWindow;
+                    const iframeLocation = iframeWindow.location.href;
+                    if (iframeLocation !== loginUrl) {
+                        redirected = true;
+                    }
+                    if (redirected || iframeLocation === "https://plus.hankyung.com/" || iframeLocation.startsWith("https://plus.hankyung.com/")) {
+                        clearInterval(checkRedirect);
+                        loadContent(date);
+                    }
+                } catch (e) {
+                    // Ignore cross-origin errors
+                }
+            }, 1000);
+
+            setTimeout(() => {
+                if (!redirected) {
+                    clearInterval(checkRedirect);
+                    loadContent(date);
+                }
+            }, 5000); // 5초 후 리디렉션이 없으면 페이지 로드
+        }
+
+        // 콘텐츠 로드 함수
+        function loadContent(date) {
+            const contentUrl = `https://plus.hankyung.com/apps/newspaper.view?section=A&date=${date}`;
+            document.getElementById('newspaper-frame').src = contentUrl;
         }
 
         // 페이지 로드 시 기본 이미지 설정
