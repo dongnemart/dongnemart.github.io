@@ -115,6 +115,14 @@
             frame.src = loginUrl;
 
             let redirected = false;
+            let userInteracted = false;
+
+            // 사용자 상호작용 감지
+            frame.onload = () => {
+                const iframeWindow = frame.contentWindow;
+                iframeWindow.addEventListener('keydown', () => userInteracted = true);
+                iframeWindow.addEventListener('mousedown', () => userInteracted = true);
+            };
 
             const checkRedirect = setInterval(() => {
                 try {
@@ -122,8 +130,6 @@
                     const iframeLocation = iframeWindow.location.href;
                     if (iframeLocation !== loginUrl) {
                         redirected = true;
-                    }
-                    if (redirected || iframeLocation === "https://plus.hankyung.com/" || iframeLocation.startsWith("https://plus.hankyung.com/")) {
                         clearInterval(checkRedirect);
                         loadContent(date); // 한국경제 콘텐츠 로드
                     }
@@ -137,7 +143,7 @@
                     clearInterval(checkRedirect);
                     loadContent(date); // 한국경제 콘텐츠 로드
                 }
-            }, 5000); // 5초 후 리디렉션이 없으면 페이지 로드
+            }, userInteracted ? 30000 : 3000); // 사용자 상호작용에 따라 시간 조정
         }
 
         // 매일경제 로그인 페이지 로드 함수
@@ -147,6 +153,14 @@
             frame.src = loginUrl;
 
             let redirected = false;
+            let userInteracted = false;
+
+            // 사용자 상호작용 감지
+            frame.onload = () => {
+                const iframeWindow = frame.contentWindow;
+                iframeWindow.addEventListener('keydown', () => userInteracted = true);
+                iframeWindow.addEventListener('mousedown', () => userInteracted = true);
+            };
 
             const checkRedirect = setInterval(() => {
                 try {
@@ -154,8 +168,6 @@
                     const iframeLocation = iframeWindow.location.href;
                     if (iframeLocation !== loginUrl) {
                         redirected = true;
-                    }
-                    if (redirected || iframeLocation === "https://digital.mk.co.kr/" || iframeLocation.startsWith("https://digital.mk.co.kr/")) {
                         clearInterval(checkRedirect);
                         loadMaeilContent(); // 매일경제 콘텐츠 로드
                     }
@@ -169,7 +181,7 @@
                     clearInterval(checkRedirect);
                     loadMaeilContent(); // 매일경제 콘텐츠 로드
                 }
-            }, 5000); // 5초 후 리디렉션이 없으면 페이지 로드
+            }, userInteracted ? 30000 : 3000); // 사용자 상호작용에 따라 시간 조정
         }
 
         // 매일경제 콘텐츠 로드 함수
