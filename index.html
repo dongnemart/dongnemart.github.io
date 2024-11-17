@@ -67,8 +67,8 @@
         <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
         <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
         <button onclick="showNewspaper('newspaper5.html')">매일경제</button>
-        <button onclick="showNewspaper('http://premier.seoul.co.kr/Login/Login.aspx')">서울신문</button>
-        <button onclick="showNewspaper('http://early.chosun.com')">조선일보</button>
+        <button onclick="openInNewWindow('http://premier.seoul.co.kr/Login/Login.aspx')">서울신문</button>
+        <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
     </div>
     <iframe id="newspaper-frame" src=""></iframe>
 
@@ -96,9 +96,16 @@
             const frame = document.getElementById('newspaper-frame');
             if (newspaper === 'newspaper2.html') {
                 loadLoginPage(date);
+            } else if (newspaper === 'newspaper5.html') {
+                loadMaeilLoginPage();
             } else {
                 frame.src = `${newspaper}?date=${date}`;
             }
+        }
+
+        // 새 창으로 열기 함수
+        function openInNewWindow(url) {
+            window.open(url, '_blank');
         }
 
         // 로그인 페이지 로드 함수
@@ -133,9 +140,45 @@
             }, 5000); // 5초 후 리디렉션이 없으면 페이지 로드
         }
 
-        // 콘텐츠 로드 함수
-        function loadContent(date) {
-            const contentUrl = `https://plus.hankyung.com/apps/newspaper.view?section=A&date=${date}`;
+        // 매일경제 로그인 페이지 로드 함수
+        function loadMaeilLoginPage() {
+            const loginUrl = "https://digital.mk.co.kr/new/login.php";
+            const frame = document.getElementById('newspaper-frame');
+            frame.src = loginUrl;
+
+            let redirected = false;
+
+            const checkRedirect = setInterval(() => {
+                try {
+                    const iframeWindow = frame.contentWindow;
+                    const iframeLocation = iframeWindow.location.href;
+                    if (iframeLocation !== loginUrl) {
+                        redirected = true;
+                    }
+                    if (redirected || iframeLocation === "https://digital.mk.co.kr/" || iframeLocation.startsWith("https://digital.mk.co.kr/")) {
+                        clearInterval(checkRedirect);
+                        loadMaeilContent();
+                    }
+                } catch (e) {
+                    // Ignore cross-origin errors
+                }
+            }, 1000);
+
+            setTimeout(() => {
+                if (!redirected) {
+                    clearInterval(checkRedirect);
+                    loadMaeilContent();
+                }
+            }, 5000); // 5초 후 리디렉션이 없으면 페이지 로드
+        }
+
+        // 매일경제 콘텐츠 로드 함수
+        function loadMaeilContent() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const year = tomorrow.getFullYear();
+            const day = String(tomorrow.getDate()).padStart(2, '0');
+            const contentUrl = `https://digital.mk.co.kr/new/index.php?MKC=M0&TM=D6&YC=${year}&DC=${day}`;
             document.getElementById('newspaper-frame').src = contentUrl;
         }
 
