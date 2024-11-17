@@ -95,9 +95,9 @@
             const date = document.getElementById('date').value.replace(/-/g, '');
             const frame = document.getElementById('newspaper-frame');
             if (newspaper === 'newspaper2.html') {
-                loadLoginPage(date);
+                loadLoginPage(date); // 한국경제 로그인 페이지 로드
             } else if (newspaper === 'newspaper5.html') {
-                loadMaeilLoginPage();
+                loadMaeilLoginPage(); // 매일경제 로그인 페이지 로드
             } else {
                 frame.src = `${newspaper}?date=${date}`;
             }
@@ -108,7 +108,7 @@
             window.open(url, '_blank');
         }
 
-        // 로그인 페이지 로드 함수
+        // 한국경제 로그인 페이지 로드 함수
         function loadLoginPage(date) {
             const loginUrl = "https://plus.hankyung.com/apps/member.login_hk?category=comp";
             const frame = document.getElementById('newspaper-frame');
@@ -125,7 +125,7 @@
                     }
                     if (redirected || iframeLocation === "https://plus.hankyung.com/" || iframeLocation.startsWith("https://plus.hankyung.com/")) {
                         clearInterval(checkRedirect);
-                        loadContent(date);
+                        loadContent(date); // 한국경제 콘텐츠 로드
                     }
                 } catch (e) {
                     // Ignore cross-origin errors
@@ -135,7 +135,7 @@
             setTimeout(() => {
                 if (!redirected) {
                     clearInterval(checkRedirect);
-                    loadContent(date);
+                    loadContent(date); // 한국경제 콘텐츠 로드
                 }
             }, 5000); // 5초 후 리디렉션이 없으면 페이지 로드
         }
@@ -157,7 +157,7 @@
                     }
                     if (redirected || iframeLocation === "https://digital.mk.co.kr/" || iframeLocation.startsWith("https://digital.mk.co.kr/")) {
                         clearInterval(checkRedirect);
-                        loadMaeilContent();
+                        loadMaeilContent(); // 매일경제 콘텐츠 로드
                     }
                 } catch (e) {
                     // Ignore cross-origin errors
@@ -167,7 +167,7 @@
             setTimeout(() => {
                 if (!redirected) {
                     clearInterval(checkRedirect);
-                    loadMaeilContent();
+                    loadMaeilContent(); // 매일경제 콘텐츠 로드
                 }
             }, 5000); // 5초 후 리디렉션이 없으면 페이지 로드
         }
@@ -179,6 +179,12 @@
             const year = tomorrow.getFullYear();
             const day = String(tomorrow.getDate()).padStart(2, '0');
             const contentUrl = `https://digital.mk.co.kr/new/index.php?MKC=M0&TM=D6&YC=${year}&DC=${day}`;
+            document.getElementById('newspaper-frame').src = contentUrl;
+        }
+
+        // 한국경제 콘텐츠 로드 함수
+        function loadContent(date) {
+            const contentUrl = `https://plus.hankyung.com/apps/newspaper.view?section=A&date=${date}`;
             document.getElementById('newspaper-frame').src = contentUrl;
         }
 
