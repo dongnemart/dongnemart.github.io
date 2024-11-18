@@ -79,7 +79,7 @@
     <div class="menu">
         <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
         <button onclick="showNewspaper('newspaper2.html')">한국경제 바로보기</button>
-        <button onclick="loadHankyungPage()">한국경제</button>
+        <button onclick="openInNewWindow('https://plus.hankyung.com/apps/member.login_hk?category=comp')">한국경제</button>
         <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
         <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
         <button onclick="showNewspaper('newspaper6.html')">매일경제 바로보기</button>
@@ -147,11 +147,7 @@
         function openLoginPopup(type) {
             let loginUrl;
             let width, height;
-            if (type === 'hankyung') {
-                loginUrl = "https://plus.hankyung.com/apps/member.login_hk?category=comp";
-                width = 1150;
-                height = 940;
-            } else if (type === 'maeil') {
+            if (type === 'maeil') {
                 loginUrl = "maekyung_up.html";
                 width = 695;
                 height = 770;
