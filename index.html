@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Early Newspapers</title>
+    <title>Newspaper Gallery</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,6 +73,7 @@
     <div class="login-links">
         <a href="#" onclick="openLoginPopup('hankyung')">한국경제 로그인</a>
         <a href="#" onclick="openLoginPopup('maeil')">매일경제 로그인</a>
+        <a href="#" onclick="openLoginPopup('seoul')">서울신문 로그인</a>
     </div>
     <div class="menu">
         <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
@@ -80,7 +81,7 @@
         <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
         <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
         <button onclick="loadMaeilPage()">매일경제</button>
-        <button onclick="openInNewWindow('http://premier.seoul.co.kr/Login/Login.aspx')">서울신문</button>
+        <button onclick="loadSeoulPage()">서울신문</button>
         <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
     </div>
     <iframe id="newspaper-frame" src=""></iframe>
@@ -132,6 +133,13 @@
             document.getElementById('newspaper-frame').src = contentUrl;
         }
 
+        // 서울신문 페이지 로드 함수
+        function loadSeoulPage() {
+            const frame = document.getElementById('newspaper-frame');
+            const contentUrl = 'http://premier.seoul.co.kr/viewer/viewer.aspx';
+            frame.src = contentUrl;
+        }
+
         // 로그인 팝업 열기 함수
         function openLoginPopup(type) {
             let loginUrl;
@@ -144,6 +152,10 @@
                 loginUrl = "maekyung_up.html";
                 width = 695;
                 height = 770;
+            } else if (type === 'seoul') {
+                loginUrl = "seoul_up.html";
+                width = 1150;
+                height = 940;
             }
             window.open(loginUrl, "loginPopup", `width=${width},height=${height}`);
         }
