@@ -59,8 +59,8 @@
         const gallery = document.getElementById('image-gallery');
 
         function loadImages() {
-            for (let i = 1; i <= 24; i++) {
-                const pageNumber = `A${String(i).padStart(3, '0')}`; // A001부터 A024까지 생성
+            for (let i = 1; i <= 33; i++) { // 33페이지까지 로드
+                const pageNumber = `A${String(i).padStart(3, '0')}`; // A001부터 A033까지 생성
                 const imgSrc = `http://plusimg.hankyung.com/apps/image.load?date=${date}&ftype=A&sz=myun2400&face=${pageNumber}&bridge=N`;
                 const imgElement = document.createElement('img');
                 imgElement.src = imgSrc;
