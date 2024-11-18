@@ -63,10 +63,10 @@
     </div>
     <div class="menu">
         <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
-        <button onclick="showNewspaper('newspaper2.html')">한국경제</button>
+        <button onclick="loadLoginPage()">한국경제</button>
         <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
         <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
-        <button onclick="showNewspaper('newspaper5.html')">매일경제</button>
+        <button onclick="loadMaeilLoginPage()">매일경제</button>
         <button onclick="openInNewWindow('http://premier.seoul.co.kr/Login/Login.aspx')">서울신문</button>
         <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
     </div>
@@ -94,13 +94,7 @@
         function showNewspaper(newspaper) {
             const date = document.getElementById('date').value.replace(/-/g, '');
             const frame = document.getElementById('newspaper-frame');
-            if (newspaper === 'newspaper2.html') {
-                loadLoginPage(date); // 한국경제 로그인 페이지 로드
-            } else if (newspaper === 'newspaper5.html') {
-                loadMaeilLoginPage(); // 매일경제 로그인 페이지 로드
-            } else {
-                frame.src = `${newspaper}?date=${date}`;
-            }
+            frame.src = `${newspaper}?date=${date}`;
         }
 
         // 새 창으로 열기 함수
@@ -109,7 +103,7 @@
         }
 
         // 한국경제 로그인 페이지 로드 함수
-        function loadLoginPage(date) {
+        function loadLoginPage() {
             const loginUrl = "https://plus.hankyung.com/apps/member.login_hk?category=comp";
             const frame = document.getElementById('newspaper-frame');
             frame.src = loginUrl;
@@ -122,6 +116,7 @@
                 const iframeWindow = frame.contentWindow;
                 iframeWindow.addEventListener('keydown', () => userInteracted = true);
                 iframeWindow.addEventListener('mousedown', () => userInteracted = true);
+                iframeWindow.addEventListener('touchstart', () => userInteracted = true); // 터치 이벤트 추가
             };
 
             const checkRedirect = setInterval(() => {
@@ -131,7 +126,7 @@
                     if (iframeLocation !== loginUrl) {
                         redirected = true;
                         clearInterval(checkRedirect);
-                        loadContent(date); // 한국경제 콘텐츠 로드
+                        loadContent(); // 한국경제 콘텐츠 로드
                     }
                 } catch (e) {
                     // Ignore cross-origin errors
@@ -141,7 +136,7 @@
             setTimeout(() => {
                 if (!redirected) {
                     clearInterval(checkRedirect);
-                    loadContent(date); // 한국경제 콘텐츠 로드
+                    loadContent(); // 한국경제 콘텐츠 로드
                 }
             }, userInteracted ? 30000 : 3000); // 사용자 상호작용에 따라 시간 조정
         }
@@ -160,6 +155,7 @@
                 const iframeWindow = frame.contentWindow;
                 iframeWindow.addEventListener('keydown', () => userInteracted = true);
                 iframeWindow.addEventListener('mousedown', () => userInteracted = true);
+                iframeWindow.addEventListener('touchstart', () => userInteracted = true); // 터치 이벤트 추가
             };
 
             const checkRedirect = setInterval(() => {
@@ -195,7 +191,8 @@
         }
 
         // 한국경제 콘텐츠 로드 함수
-        function loadContent(date) {
+        function loadContent() {
+            const date = document.getElementById('date').value.replace(/-/g, '');
             const contentUrl = `https://plus.hankyung.com/apps/newspaper.view?section=A&date=${date}`;
             document.getElementById('newspaper-frame').src = contentUrl;
         }
