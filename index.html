@@ -74,6 +74,7 @@
         <a href="#" onclick="openLoginPopup('hankyung')">한국경제 로그인</a>
         <a href="#" onclick="openLoginPopup('maeil')">매일경제 로그인</a>
         <a href="#" onclick="openLoginPopup('seoul')">서울신문 로그인</a>
+        <a href="#" onclick="openImagePopup()">서울신문 안 될 때</a>
     </div>
     <div class="menu">
         <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
@@ -158,6 +159,12 @@
                 height = 940;
             }
             window.open(loginUrl, "loginPopup", `width=${width},height=${height}`);
+        }
+
+        // 이미지 팝업 열기 함수
+        function openImagePopup() {
+            const imgUrl = "seoul.png";
+            window.open(imgUrl, "imagePopup", "width=1075,height=1081");
         }
 
         // 페이지 로드 시 기본 이미지 설정
