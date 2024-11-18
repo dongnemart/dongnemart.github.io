@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newspaper 6 Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .image-container {
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        @media (max-width: 768px) {
+            .image-container {
+                margin: 5px;
+                padding: 5px;
+            }
+        }
+        @media (max-width: 480px) {
+            .image-container {
+                margin: 2px;
+                padding: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="image-gallery"></div>
+
+    <script>
+        // URL에서 날짜를 가져와 이미지 URL 업데이트
+        const urlParams = new URLSearchParams(window.location.search);
+        const date = urlParams.get('date');
+        const gallery = document.getElementById('image-gallery');
+
+        function loadImages() {
+            const year = date.slice(0, 4);
+            const month = date.slice(4, 6);
+            const day = date.slice(6, 8);
+            for (let i = 1; i <= 32; i++) {
+                const pageNumber = String(i).padStart(2, '0'); // 01부터 32까지 생성
+                const imgSrc = `https://file2.mk.co.kr/mkde/${year}/${month}/${day}/tmp_page/01_${pageNumber}_ORG.jpg`;
+                const imgElement = document.createElement('img');
+                imgElement.src = imgSrc;
+                imgElement.alt = `Image ${pageNumber}`;
+                const container = document.createElement('div');
+                container.className = 'image-container';
+                container.appendChild(imgElement);
+                gallery.appendChild(container);
+            }
+        }
+
+        // 스타일시트가 로드된 후에 이미지 로드
+        window.addEventListener('load', loadImages);
+    </script>
+</body>
+</html>
