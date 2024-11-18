@@ -34,6 +34,15 @@
             padding: 10px 20px;
             font-size: 16px;
         }
+        .login-links {
+            margin-bottom: 10px;
+        }
+        .login-links a {
+            margin: 0 10px;
+            font-size: 14px;
+            text-decoration: none;
+            color: blue;
+        }
         @media (max-width: 768px) {
             iframe {
                 height: 800px; /* 작은 화면에서는 높이를 800px로 조정 */
@@ -61,12 +70,16 @@
         <input type="date" id="date" value="" onchange="updateImages()">
         <button onclick="updateImages()">지면 업데이트</button>
     </div>
+    <div class="login-links">
+        <a href="#" onclick="openLoginPopup('hankyung')">한국경제 로그인</a>
+        <a href="#" onclick="openLoginPopup('maeil')">매일경제 로그인</a>
+    </div>
     <div class="menu">
         <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
-        <button onclick="loadLoginPage()">한국경제</button>
+        <button onclick="loadHankyungPage()">한국경제</button>
         <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
         <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
-        <button onclick="loadMaeilLoginPage()">매일경제</button>
+        <button onclick="loadMaeilPage()">매일경제</button>
         <button onclick="openInNewWindow('http://premier.seoul.co.kr/Login/Login.aspx')">서울신문</button>
         <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
     </div>
@@ -102,86 +115,15 @@
             window.open(url, '_blank');
         }
 
-        // 한국경제 로그인 페이지 로드 함수
-        function loadLoginPage() {
-            const loginUrl = "https://plus.hankyung.com/apps/member.login_hk?category=comp";
-            const frame = document.getElementById('newspaper-frame');
-            frame.src = loginUrl;
-
-            let redirected = false;
-            let userInteracted = false;
-
-            // 사용자 상호작용 감지
-            frame.onload = () => {
-                const iframeWindow = frame.contentWindow;
-                iframeWindow.addEventListener('keydown', () => userInteracted = true);
-                iframeWindow.addEventListener('mousedown', () => userInteracted = true);
-                iframeWindow.addEventListener('touchstart', () => userInteracted = true); // 터치 이벤트 추가
-            };
-
-            const checkRedirect = setInterval(() => {
-                try {
-                    const iframeWindow = frame.contentWindow;
-                    const iframeLocation = iframeWindow.location.href;
-                    if (iframeLocation !== loginUrl) {
-                        redirected = true;
-                        clearInterval(checkRedirect);
-                        loadContent(); // 한국경제 콘텐츠 로드
-                    }
-                } catch (e) {
-                    // Ignore cross-origin errors
-                }
-            }, 1000);
-
-            setTimeout(() => {
-                if (!redirected) {
-                    clearInterval(checkRedirect);
-                    loadContent(); // 한국경제 콘텐츠 로드
-                }
-            }, userInteracted ? 30000 : 3000); // 사용자 상호작용에 따라 시간 조정
+        // 한국경제 페이지 로드 함수
+        function loadHankyungPage() {
+            const date = document.getElementById('date').value.replace(/-/g, '');
+            const contentUrl = `https://plus.hankyung.com/apps/newspaper.view?section=A&date=${date}`;
+            document.getElementById('newspaper-frame').src = contentUrl;
         }
 
-        // 매일경제 로그인 페이지 로드 함수
-        function loadMaeilLoginPage() {
-            const loginUrl = "https://digital.mk.co.kr/new/login.php";
-            const frame = document.getElementById('newspaper-frame');
-            frame.src = loginUrl;
-
-            let redirected = false;
-            let userInteracted = false;
-
-            // 사용자 상호작용 감지
-            frame.onload = () => {
-                const iframeWindow = frame.contentWindow;
-                iframeWindow.addEventListener('keydown', () => userInteracted = true);
-                iframeWindow.addEventListener('mousedown', () => userInteracted = true);
-                iframeWindow.addEventListener('touchstart', () => userInteracted = true); // 터치 이벤트 추가
-            };
-
-            const checkRedirect = setInterval(() => {
-                try {
-                    const iframeWindow = frame.contentWindow;
-                    const iframeLocation = iframeWindow.location.href;
-                    if (iframeLocation !== loginUrl) {
-                        redirected = true;
-                        clearInterval(checkRedirect);
-                        loadMaeilContent(); // 매일경제 콘텐츠 로드
-                    }
-                } catch (e) {
-                    // Ignore cross-origin errors
-                }
-            }, 1000);
-
-            setTimeout(() => {
-                if (!redirected) {
-                    clearInterval(checkRedirect);
-                    loadMaeilContent(); // 매일경제 콘텐츠 로드
-                }
-            }, userInteracted ? 30000 : 3000); // 사용자 상호작용에 따라 시간 조정
-        }
-
-        // 매일경제 콘텐츠 로드 함수
-        function loadMaeilContent() {
+        // 매일경제 페이지 로드 함수
+        function loadMaeilPage() {
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             const year = tomorrow.getFullYear();
@@ -190,11 +132,20 @@
             document.getElementById('newspaper-frame').src = contentUrl;
         }
 
-        // 한국경제 콘텐츠 로드 함수
-        function loadContent() {
-            const date = document.getElementById('date').value.replace(/-/g, '');
-            const contentUrl = `https://plus.hankyung.com/apps/newspaper.view?section=A&date=${date}`;
-            document.getElementById('newspaper-frame').src = contentUrl;
+        // 로그인 팝업 열기 함수
+        function openLoginPopup(type) {
+            let loginUrl;
+            let width, height;
+            if (type === 'hankyung') {
+                loginUrl = "hankyung_up.html";
+                width = 1150;
+                height = 940;
+            } else if (type === 'maeil') {
+                loginUrl = "maekyung_up.html";
+                width = 695;
+                height = 770;
+            }
+            window.open(loginUrl, "loginPopup", `width=${width},height=${height}`);
         }
 
         // 페이지 로드 시 기본 이미지 설정
