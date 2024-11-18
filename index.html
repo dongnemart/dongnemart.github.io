@@ -148,7 +148,7 @@
             let loginUrl;
             let width, height;
             if (type === 'hankyung') {
-                loginUrl = "hankyung_up.html";
+                loginUrl = "https://plus.hankyung.com/apps/member.login_hk?category=comp";
                 width = 1150;
                 height = 940;
             } else if (type === 'maeil') {
@@ -160,7 +160,8 @@
                 width = 1150;
                 height = 940;
             }
-            window.open(loginUrl, "loginPopup", `width=${width},height=${height}`);
+            const popup = window.open(loginUrl, "loginPopup", `width=${width},height=${height}`);
+            popup.focus();
         }
 
         // 이미지 팝업 열기 함수
