@@ -35,15 +35,6 @@
             padding: 10px 20px;
             font-size: 16px;
         }
-        .login-links {
-            margin-bottom: 10px;
-        }
-        .login-links a {
-            margin: 0 10px;
-            font-size: 14px;
-            text-decoration: none;
-            color: blue;
-        }
         @media (max-width: 768px) {
             iframe {
                 height: 800px; /* 작은 화면에서는 높이를 800px로 조정 */
@@ -72,9 +63,6 @@
         <button onclick="updateImages()">지면 업데이트</button>
     </div>
     <div class="login-links">
-        <a href="#" onclick="openLoginPopup('hankyung')">한국경제 로그인</a>
-        <a href="#" onclick="openLoginPopup('maeil')">매일경제 로그인</a>
-        <a href="#" onclick="openLoginPopup('seoul')">서울신문 로그인</a>
         <a href="#" onclick="openImagePopup()">한국경제·서울신문 안 될 때</a>
     </div>
     <div class="menu">
@@ -84,8 +72,6 @@
         <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
         <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
         <button onclick="showNewspaper('newspaper6.html')">매일경제 바로보기</button>
-        <button onclick="loadMaeilPage()">매일경제</button>
-        <button onclick="loadSeoulPage()">서울신문</button>
         <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
     </div>
     <iframe id="newspaper-frame" src=""></iframe>
@@ -118,47 +104,6 @@
         // 새 창으로 열기 함수
         function openInNewWindow(url) {
             window.open(url, '_blank');
-        }
-
-        // 한국경제 페이지 로드 함수
-        function loadHankyungPage() {
-            const date = document.getElementById('date').value.replace(/-/g, '');
-            const contentUrl = `https://plus.hankyung.com/apps/newspaper.view?section=A&date=${date}`;
-            document.getElementById('newspaper-frame').src = contentUrl;
-        }
-
-        // 매일경제 페이지 로드 함수
-        function loadMaeilPage() {
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const year = tomorrow.getFullYear();
-            const day = String(tomorrow.getDate()).padStart(2, '0');
-            const contentUrl = `https://digital.mk.co.kr/new/index.php?MKC=M0&TM=D6&YC=${year}&DC=${day}`;
-            document.getElementById('newspaper-frame').src = contentUrl;
-        }
-
-        // 서울신문 페이지 로드 함수
-        function loadSeoulPage() {
-            const frame = document.getElementById('newspaper-frame');
-            const contentUrl = 'seoul.html';
-            frame.src = contentUrl;
-        }
-
-        // 로그인 팝업 열기 함수
-        function openLoginPopup(type) {
-            let loginUrl;
-            let width, height;
-            if (type === 'maeil') {
-                loginUrl = "maekyung_up.html";
-                width = 695;
-                height = 770;
-            } else if (type === 'seoul') {
-                loginUrl = "seoul_up.html";
-                width = 1150;
-                height = 940;
-            }
-            const popup = window.open(loginUrl, "loginPopup", `width=${width},height=${height}`);
-            popup.focus();
         }
 
         // 이미지 팝업 열기 함수
