@@ -3,26 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" >
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
     <title>Early Newspapers</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             margin: 0;
             padding: 20px;
             background-color: #f0f0f0;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f0f0f0; /* 배경색을 iframe과 통일 */
+            padding: 5px; /* 패딩을 5px로 변경 */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+            text-align: center; /* 글씨를 가운데 정렬 */
+        }
+        .content {
+            margin-top: 150px; /* margin-top을 150px로 조정 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .date-input {
             margin-bottom: 20px;
         }
         iframe {
             width: 100%;
-            height: 1200px; /* 높이를 1200px로 조정 */
+            height: calc(100vh - 155px); /* Header와 margin만큼 높이를 조정 (헤더 패딩 5px + margin-top 150px) */
             border: none;
             margin-bottom: 20px;
+            background-color: #f0f0f0; /* 배경색 통일 */
         }
         .menu {
             margin-bottom: 20px;
@@ -37,7 +52,7 @@
         }
         @media (max-width: 768px) {
             iframe {
-                height: 800px; /* 작은 화면에서는 높이를 800px로 조정 */
+                height: calc(100vh - 205px); /* 작은 화면에서는 높이를 조정 */
             }
             .menu button {
                 padding: 8px 16px;
@@ -46,7 +61,7 @@
         }
         @media (max-width: 480px) {
             iframe {
-                height: 600px; /* 더 작은 화면에서는 높이를 600px로 조정 */
+                height: calc(100vh - 225px); /* 더 작은 화면에서는 높이를 조정 */
             }
             .menu button {
                 padding: 6px 12px;
@@ -56,26 +71,30 @@
     </style>
 </head>
 <body>
-    <h1>가판</h1>
-    <div class="date-input">
-        <label for="date">날짜를 선택하세요: </label>
-        <input type="date" id="date" value="" onchange="updateImages()">
-        <button onclick="updateImages()">지면 업데이트</button>
+    <div class="header">
+        <h1>가판</h1>
+        <div class="date-input">
+            <label for="date">날짜를 선택하세요: </label>
+            <input type="date" id="date" value="" onchange="updateImages()">
+            <button onclick="updateImages()">지면 업데이트</button>
+        </div>
+        <div class="login-links">
+            <a href="#" onclick="openImagePopup()">한국경제·서울신문 안 될 때</a>
+        </div>
+        <div class="menu">
+            <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
+            <button onclick="showNewspaper('newspaper2.html')">한국경제 바로보기</button>
+            <button onclick="openInNewWindow('http://plus.hankyung.com')">한국경제</button>
+            <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
+            <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
+            <button onclick="showNewspaper('newspaper6.html')">매일경제</button>
+            <button onclick="loadSeoulPage()">서울신문</button>
+            <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
+        </div>
     </div>
-    <div class="login-links">
-        <a href="#" onclick="openImagePopup()">한국경제·서울신문 안 될 때</a>
+    <div class="content">
+        <iframe id="newspaper-frame" src=""></iframe>
     </div>
-    <div class="menu">
-        <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
-        <button onclick="showNewspaper('newspaper2.html')">한국경제 바로보기</button>
-        <button onclick="openInNewWindow('http://plus.hankyung.com')">한국경제</button>
-        <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
-        <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
-        <button onclick="showNewspaper('newspaper6.html')">매일경제</button>
-        <button onclick="loadSeoulPage()">서울신문</button>
-        <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
-    </div>
-    <iframe id="newspaper-frame" src=""></iframe>
 
     <script>
         // 내일 날짜를 기본값으로 설정
