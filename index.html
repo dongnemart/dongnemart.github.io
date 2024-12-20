@@ -3,66 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
     <title>Early Newspapers</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #f0f0f0;
         }
-        .header {
+        /* 상위 프레임 - 메뉴 + 버튼 */
+        .top-frame {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #f0f0f0; /* 배경색을 iframe과 통일 */
-            padding: 5px; /* 패딩을 5px로 변경 */
+            background-color: #f0f0f0;
+            padding: 5px 0; /* 상하 패딩을 줄여서 차지하는 공간을 줄임 */
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             z-index: 1000;
-            text-align: center; /* 글씨를 가운데 정렬 */
         }
-        .content {
-            margin-top: 150px; /* margin-top을 150px로 조정 */
+
+        .top-frame .header {
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .date-input {
-            margin-bottom: 20px;
+
+        /* 가판 글씨 크기 줄이기 */
+        .top-frame .header h1 {
+            font-size: 24px; /* 글씨 크기 축소 */
+            margin: 0;
+            padding: 0;
         }
-        iframe {
-            width: 100%;
-            height: calc(100vh - 155px); /* Header와 margin만큼 높이를 조정 (헤더 패딩 5px + margin-top 150px) */
-            border: none;
-            margin-bottom: 20px;
-            background-color: #f0f0f0; /* 배경색 통일 */
+
+        .top-frame .date-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
         }
-        .menu {
-            margin-bottom: 20px;
+
+        .top-frame .login-links {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .top-frame .login-links a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .top-frame .menu {
+            margin-top: 10px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
+
         .menu button {
             margin: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 8px 16px;
+            font-size: 14px;
         }
+
+        /* 콘텐츠 영역 */
+        .content {
+            margin-top: 140px; /* 상위 프레임의 높이를 고려하여 여백 조정 */
+            padding: 20px;
+        }
+
+        /* iframe을 넣을 프레임 영역 */
+        .frame-container {
+            width: 100%;
+            height: calc(100vh - 140px); /* 화면의 높이에서 상위 프레임의 높이를 제외 */
+            overflow: auto; /* 스크롤 가능하게 설정 */
+            border: 1px solid #ddd;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #f0f0f0;
+        }
+
+        /* 모바일 화면에서 버튼 크기 조정 */
         @media (max-width: 768px) {
-            iframe {
-                height: calc(100vh - 205px); /* 작은 화면에서는 높이를 조정 */
-            }
             .menu button {
-                padding: 8px 16px;
-                font-size: 14px;
+                padding: 6px 14px;
+                font-size: 12px;
             }
         }
+
         @media (max-width: 480px) {
-            iframe {
-                height: calc(100vh - 225px); /* 더 작은 화면에서는 높이를 조정 */
-            }
             .menu button {
                 padding: 6px 12px;
                 font-size: 12px;
@@ -71,16 +105,22 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>가판</h1>
-        <div class="date-input">
-            <label for="date">날짜를 선택하세요: </label>
-            <input type="date" id="date" value="" onchange="updateImages()">
-            <button onclick="updateImages()">지면 업데이트</button>
+    <!-- 상위 프레임: 메뉴와 버튼을 포함한 영역 -->
+    <div class="top-frame">
+        <div class="header">
+            <h1>가판</h1>
+            <!-- 날짜 선택기와 버튼 사이에 링크 넣기 -->
+            <div class="date-input">
+                <label for="date">날짜를 선택하세요: </label>
+                <input type="date" id="date" value="" onchange="updateImages()">
+                <button onclick="updateImages()">지면 업데이트</button>
+            </div>
+            <!-- 링크 중앙에 배치 -->
+            <div class="login-links">
+                <a href="#" onclick="openImagePopup()">한국경제·서울신문 안 될 때</a>
+            </div>
         </div>
-        <div class="login-links">
-            <a href="#" onclick="openImagePopup()">한국경제·서울신문 안 될 때</a>
-        </div>
+        <!-- 메뉴 버튼 영역 -->
         <div class="menu">
             <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
             <button onclick="showNewspaper('newspaper2.html')">한국경제 바로보기</button>
@@ -92,8 +132,13 @@
             <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
         </div>
     </div>
+
+    <!-- 콘텐츠 영역: 실제 신문 콘텐츠가 들어갈 영역 -->
     <div class="content">
-        <iframe id="newspaper-frame" src=""></iframe>
+        <!-- iframe을 담을 컨테이너 -->
+        <div class="frame-container">
+            <iframe id="newspaper-frame" src=""></iframe>
+        </div>
     </div>
 
     <script>
