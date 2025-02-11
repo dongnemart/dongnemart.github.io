@@ -8,119 +8,107 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
             background-color: #f0f0f0;
         }
-        /* 상위 프레임 - 메뉴 + 버튼 */
+
         .top-frame {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #f0f0f0;
-            padding: 5px 0; /* 상하 패딩을 줄여서 차지하는 공간을 줄임 */
+            background: #f0f0f0;
+            padding: 5px 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             z-index: 1000;
         }
 
-        .top-frame .header {
+        .header {
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* 가판 글씨 크기 줄이기 */
-        .top-frame .header h1 {
-            font-size: 24px; /* 글씨 크기 축소 */
+        .header h1 {
+            font-size: 24px;
             margin: 0;
-            padding: 0;
         }
-
-        .top-frame .date-input {
+        .date-input {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 10px;
+            margin: 10px 0;
         }
 
-        .top-frame .login-links {
-            margin-top: 10px;
-            text-align: center;
+        .login-links {
+            margin: 10px 0;
         }
 
-        .top-frame .login-links a {
+        .login-links a {
             text-decoration: none;
             color: #007bff;
         }
 
-        .top-frame .menu {
-            margin-top: 10px;
+        .menu {
+            margin: 10px 0;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 5px;
         }
 
         .menu button {
-            margin: 5px;
+            margin: 0;
             padding: 8px 16px;
             font-size: 14px;
+            cursor: pointer;
         }
 
-        /* 콘텐츠 영역 */
         .content {
-            margin-top: 140px; /* 상위 프레임의 높이를 고려하여 여백 조정 */
+            margin-top: 140px;
             padding: 20px;
         }
 
-        /* iframe을 넣을 프레임 영역 */
         .frame-container {
             width: 100%;
-            height: calc(100vh - 140px); /* 화면의 높이에서 상위 프레임의 높이를 제외 */
-            overflow: auto; /* 스크롤 가능하게 설정 */
-            border: 1px solid #ddd;
+            height: calc(100vh - 140px);
+            overflow: auto;
         }
 
         iframe {
             width: 100%;
             height: 100%;
             border: none;
-            background-color: #f0f0f0;
         }
 
-        /* 모바일 화면에서 버튼 크기 조정 */
         @media (max-width: 768px) {
             .menu button {
                 padding: 6px 14px;
-                font-size: 12px;
+                font-size: 13px;
             }
         }
 
         @media (max-width: 480px) {
             .menu button {
-                padding: 6px 12px;
+                padding: 5px 12px;
                 font-size: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 상위 프레임: 메뉴와 버튼을 포함한 영역 -->
     <div class="top-frame">
         <div class="header">
             <h1>가판</h1>
-            <!-- 날짜 선택기와 버튼 사이에 링크 넣기 -->
             <div class="date-input">
-                <label for="date">날짜를 선택하세요: </label>
-                <input type="date" id="date" value="" onchange="updateImages()">
-                <button onclick="updateImages()">지면 업데이트</button>
+                <label for="date">날짜 선택: </label>
+                <input type="date" id="date">
+                <button onclick="updateImages()">업데이트</button>
             </div>
-            <!-- 링크 중앙에 배치 -->
             <div class="login-links">
                 <a href="#" onclick="openImagePopup()">한국경제·서울신문 안 될 때</a>
             </div>
         </div>
-        <!-- 메뉴 버튼 영역 -->
         <div class="menu">
             <button onclick="showNewspaper('newspaper1.html')">서울경제</button>
             <button onclick="showNewspaper('newspaper2.html')">한국경제 바로보기</button>
@@ -128,64 +116,47 @@
             <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
             <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
             <button onclick="showNewspaper('newspaper6.html')">매일경제</button>
-            <button onclick="loadSeoulPage()">서울신문</button>
+            <button onclick="showNewspaper('seoul.html')">서울신문</button>
             <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
         </div>
     </div>
 
-    <!-- 콘텐츠 영역: 실제 신문 콘텐츠가 들어갈 영역 -->
     <div class="content">
-        <!-- iframe을 담을 컨테이너 -->
         <div class="frame-container">
-            <iframe id="newspaper-frame" src=""></iframe>
+            <iframe id="newspaper-frame"></iframe>
         </div>
     </div>
 
     <script>
-        // 내일 날짜를 기본값으로 설정
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const defaultDate = tomorrow.toISOString().slice(0, 10);
-        document.getElementById('date').value = defaultDate;
+        // Initialize date picker with tomorrow's date
+        const dateInput = document.getElementById('date');
+        dateInput.valueAsDate = new Date(Date.now() + 86400000);
+        dateInput.addEventListener('change', updateImages);
 
-        // 이미지 URL 업데이트 함수
+        // Core functions
         function updateImages() {
-            const date = document.getElementById('date').value.replace(/-/g, '');
             const frame = document.getElementById('newspaper-frame');
-            const currentSrc = frame.src;
-            if (currentSrc) {
-                const newSrc = currentSrc.split('?')[0] + `?date=${date}`;
-                frame.src = newSrc;
-            }
+            const currentPath = frame.src.split('?')[0];
+            frame.src = `${currentPath}?date=${dateInput.value.replace(/-/g, '')}`;
         }
 
-        // 신문 선택 함수
-        function showNewspaper(newspaper) {
-            const date = document.getElementById('date').value.replace(/-/g, '');
-            const frame = document.getElementById('newspaper-frame');
-            frame.src = `${newspaper}?date=${date}`;
+        function showNewspaper(page) {
+            document.getElementById('newspaper-frame').src = 
+                `${page}?date=${dateInput.value.replace(/-/g, '')}`;
         }
 
-        // 새 창으로 열기 함수
         function openInNewWindow(url) {
-            window.open(url, '_blank');
+            window.open(url, '_blank', 'noopener');
         }
 
-        // 서울신문 페이지 로드 함수
-        function loadSeoulPage() {
-            const frame = document.getElementById('newspaper-frame');
-            const contentUrl = 'seoul.html';
-            frame.src = contentUrl;
-        }
-
-        // 이미지 팝업 열기 함수
         function openImagePopup() {
-            const imgUrl = "seoul.png";
-            window.open(imgUrl, "imagePopup", "width=1075,height=1081");
+            window.open("seoul.png", "imagePopup", "width=1075,height=1081");
         }
 
-        // 페이지 로드 시 기본 이미지 설정
-        window.onload = () => showNewspaper('newspaper1.html');
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            showNewspaper('newspaper1.html');
+        });
     </script>
 </body>
-</html>
+</html>        
