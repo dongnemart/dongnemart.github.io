@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +19,7 @@
             width: 100%;
             background: #f0f0f0;
             padding: 5px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 1000;
         }
 
@@ -33,6 +34,7 @@
             font-size: 24px;
             margin: 0;
         }
+
         .date-input {
             display: flex;
             align-items: center;
@@ -96,6 +98,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="top-frame">
         <div class="header">
@@ -116,7 +119,8 @@
             <button onclick="showNewspaper('newspaper3.html')">국민일보</button>
             <button onclick="showNewspaper('newspaper4.html')">세계일보</button>
             <button onclick="showNewspaper('newspaper6.html')">매일경제</button>
-            <button onclick="showNewspaper('seoul.html')">서울신문</button>
+            <button
+                onclick="document.getElementById('newspaper-frame').src='http://premier.seoul.co.kr/viewer/viewer.aspx'">서울신문</button>
             <button onclick="openInNewWindow('http://early.chosun.com')">조선일보</button>
         </div>
     </div>
@@ -141,7 +145,7 @@
         }
 
         function showNewspaper(page) {
-            document.getElementById('newspaper-frame').src = 
+            document.getElementById('newspaper-frame').src =
                 `${page}?date=${dateInput.value.replace(/-/g, '')}`;
         }
 
@@ -159,4 +163,5 @@
         });
     </script>
 </body>
-</html>        
+
+</html>
