@@ -17,7 +17,7 @@
     --krds-space-4: 16px;
     --krds-space-5: 20px;
     --krds-space-6: 24px;
-    --krds-viewer-offset: 224px;
+    --krds-viewer-offset: 185px;
 }
 
 * {
@@ -219,7 +219,7 @@ iframe {
 
 @media (max-width: 768px) {
     :root {
-        --krds-viewer-offset: 260px;
+        --krds-viewer-offset: 192px;
     }
 
     .top-frame {
@@ -244,9 +244,15 @@ iframe {
     }
 }
 
+@media (max-width: 640px) {
+    :root {
+        --krds-viewer-offset: 224px;
+    }
+}
+
 @media (max-width: 480px) {
     :root {
-        --krds-viewer-offset: 276px;
+        --krds-viewer-offset: 227px;
     }
 
     .menu {
