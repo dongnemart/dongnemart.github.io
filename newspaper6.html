@@ -4,43 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newspaper 6 Gallery</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-        .image-container {
-            margin: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: #fff;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        @media (max-width: 768px) {
-            .image-container {
-                margin: 5px;
-                padding: 5px;
-            }
-        }
-        @media (max-width: 480px) {
-            .image-container {
-                margin: 2px;
-                padding: 2px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="krds-ui.css">
     <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 </head>
-<body>
-    <div id="image-gallery"></div>
+<body class="gallery-page">
+    <div id="image-gallery" aria-label="매일경제 지면 목록"></div>
 
     <script>
         // URL에서 날짜를 가져와 이미지 URL 업데이트
@@ -57,7 +25,7 @@
                 const imgSrc = `https://file2.mk.co.kr/mkde/${year}/${month}/${day}/tmp_page/01_${pageNumber}_ORG.jpg`;
                 const imgElement = document.createElement('img');
                 imgElement.src = imgSrc;
-                imgElement.alt = `Image ${pageNumber}`;
+                imgElement.alt = `매일경제 지면 ${pageNumber}`;
                 const container = document.createElement('div');
                 container.className = 'image-container';
                 container.appendChild(imgElement);

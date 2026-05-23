@@ -4,43 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newspaper 2 Gallery</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-        .image-container {
-            margin: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: #fff;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        @media (max-width: 768px) {
-            .image-container {
-                margin: 5px;
-                padding: 5px;
-            }
-        }
-        @media (max-width: 480px) {
-            .image-container {
-                margin: 2px;
-                padding: 2px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="krds-ui.css">
     <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 </head>
-<body>
-    <div id="image-gallery"></div>
+<body class="gallery-page">
+    <div id="image-gallery" aria-label="한국경제 지면 목록"></div>
 
     <script type="text/javascript">
         var isMobile = false;
@@ -65,7 +33,7 @@
                 const imgSrc = `http://plusimg.hankyung.com/apps/image.load?date=${date}&ftype=A&sz=myun2400&face=${pageNumber}&bridge=N`;
                 const imgElement = document.createElement('img');
                 imgElement.src = imgSrc;
-                imgElement.alt = `Image ${pageNumber}`;
+                imgElement.alt = `한국경제 지면 ${pageNumber}`;
                 const container = document.createElement('div');
                 container.className = 'image-container';
                 container.appendChild(imgElement);
