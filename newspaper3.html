@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newspaper 3 Gallery</title>
     <link rel="stylesheet" href="krds-ui.css">
-    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>    
+    <script src="https://unpkg.com/@panzoom/panzoom@4.6.2/dist/panzoom.min.js"></script>    
 </head>
 <body class="gallery-page">
     <div id="image-gallery" aria-label="국민일보 지면 목록"></div>
@@ -38,12 +38,21 @@
                 let initialDistance = 0;
                 let currentScale = 1;
                 let touchStartY = 0;
+                let tapStartX = 0;
+                let tapStartY = 0;
+                let touchMoved = false;
+                let lastTapTime = 0;
+                let lastTapX = 0;
+                let lastTapY = 0;
 
                 imgElement.addEventListener('touchstart', (event) => {
                     if (event.touches.length === 2) {
                         initialDistance = getDistance(event.touches);
                     } else if (event.touches.length === 1) {
+                        tapStartX = event.touches[0].clientX;
+                        tapStartY = event.touches[0].clientY;
                         touchStartY = event.touches[0].clientY;
+                        touchMoved = false;
                     }
                 });
 
@@ -57,19 +66,42 @@
                             const speedFactor = 3.5; // 이 값을 조정하여 속도를 변경
                             let targetScale = currentScale * scaleChange * speedFactor;
 
-                            panzoom.zoomTo(targetScale, { animate: false });
+                            panzoom.zoom(targetScale, { animate: false });
                         }
                     } else if (event.touches.length === 1) {
                         const touchEndY = event.touches[0].clientY;
+                        if (Math.abs(event.touches[0].clientX - tapStartX) > 10 || Math.abs(touchEndY - tapStartY) > 10) {
+                            touchMoved = true;
+                        }
                         window.scrollBy(0, touchStartY - touchEndY);
                         touchStartY = touchEndY;
                     }
                 });
 
-                imgElement.addEventListener('touchend', () => {
+                imgElement.addEventListener('touchend', (event) => {
+                    if (initialDistance === 0 && event.changedTouches.length === 1 && !touchMoved) {
+                        const now = Date.now();
+                        const tapX = event.changedTouches[0].clientX;
+                        const tapY = event.changedTouches[0].clientY;
+                        const isDoubleTap = now - lastTapTime < 300 &&
+                            Math.abs(tapX - lastTapX) < 30 &&
+                            Math.abs(tapY - lastTapY) < 30;
+
+                        if (isDoubleTap) {
+                            event.preventDefault();
+                            panzoom.zoom(2, { animate: false });
+                            currentScale = 2;
+                            lastTapTime = 0;
+                        } else {
+                            lastTapTime = now;
+                            lastTapX = tapX;
+                            lastTapY = tapY;
+                        }
+                    }
+
                     currentScale = panzoom.getScale();
                     initialDistance = 0;
-                });
+                }, { passive: false });
 
                 container.addEventListener('wheel', panzoom.zoomWithWheel);
 

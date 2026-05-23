@@ -214,6 +214,7 @@ iframe {
     max-width: 100%;
     height: auto;
     object-fit: contain;
+    touch-action: manipulation;
 }
 
 @media (max-width: 768px) {
