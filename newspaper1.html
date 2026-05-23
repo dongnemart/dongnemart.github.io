@@ -32,10 +32,22 @@
                     maxScale: 3,  // 최대 확대 배율을 3배로 설정
                     contain: 'outside',
                 });
+                let initialScale = panzoom.getScale();
+                let initialTransform = imgElement.style.transform;
+                function rememberInitialTransform() {
+                    if (currentScale <= initialScale + 0.01) {
+                        initialScale = panzoom.getScale();
+                        initialTransform = imgElement.style.transform;
+                    }
+                }
+
+                imgElement.addEventListener('load', rememberInitialTransform);
+                requestAnimationFrame(() => requestAnimationFrame(rememberInitialTransform));
 
                 // 터치 이벤트 처리
                 let initialDistance = 0;
                 let currentScale = 1;
+                let restoredInitialScale = false;
                 let touchStartY = 0;
                 let tapStartX = 0;
                 let tapStartY = 0;
@@ -53,7 +65,7 @@
                         touchStartY = event.touches[0].clientY;
                         touchMoved = false;
                     }
-                });
+                }, { capture: true });
 
                 imgElement.addEventListener('touchmove', (event) => {
                     if (event.touches.length === 2) {
@@ -88,8 +100,18 @@
 
                         if (isDoubleTap) {
                             event.preventDefault();
-                            panzoom.zoom(2, { animate: false });
-                            currentScale = 2;
+                            if (currentScale > initialScale + 0.01) {
+                                panzoom.reset({ animate: false });
+                                panzoom.zoom(initialScale, { animate: false, force: true });
+                                imgElement.style.transform = initialTransform;
+                                currentScale = initialScale;
+                                restoredInitialScale = true;
+                            } else {
+                                initialScale = panzoom.getScale();
+                                initialTransform = imgElement.style.transform;
+                                const zoomValues = panzoom.zoom(3, { animate: false, force: true });
+                                currentScale = zoomValues.scale;
+                            }
                             lastTapTime = 0;
                         } else {
                             lastTapTime = now;
@@ -98,7 +120,11 @@
                         }
                     }
 
-                    currentScale = panzoom.getScale();
+                    if (restoredInitialScale) {
+                        restoredInitialScale = false;
+                    } else {
+                        currentScale = panzoom.getScale();
+                    }
                     initialDistance = 0;
                 }, { passive: false });
 
